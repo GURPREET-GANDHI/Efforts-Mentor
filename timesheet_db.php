@@ -60,21 +60,48 @@ goto a;
 
 else
 {
-
-echo $date2;
-$query="INSERT INTO timesheet(date, name, proj_id, act_id, t_in, t_out, dur) VALUES ('".$date2."' , '".$c_id."' , '".$p_id."' , '".$a_id."' , '".$start."' , '".$end."' , '".$difference."' )";
-$res=mysqli_query($con, $query);
-echo $query;
+	/* trigger for budget control */
 	
-	echo $c_id;
-	if($res)
-	echo 'Success';
-	else
-	echo $query;
+	$sqlQuery= "SELECT `target`, `check` FROM `project` WHERE `proj_id`= '".$p_id."' ";
+	$result=mysqli_query($con,$sqlQuery);
+	$s=mysqli_fetch_array($result);
+	//echo $sqlQuery;
 	
-
-
- redirect('./timesheet.php');
+	$sql="SELECT SUM(`dur`) as sum FROM `timesheet` WHERE `proj_id`='".$p_id."' ";
+	$re=mysqli_query($con,$sql);
+	$t=mysqli_fetch_array($re);
+	
+	//echo $sql;
+	$totalTempHours=$t['sum']+ $difference;
+	$lim=0.80*($s['target']);
+			
+			if($totalTempHours >= $lim && $s['check']) ///define the contraint for the percentage 
+			{
+			echo '<script type="text/javascript">alert("The target limit which is '.$lim.' exceeds Please contact the Administrator ");window.history.go(-1);</script>';
+			goto a;
+			
+			}
+	
+		/* END*/
+		else
+			{
+		
+		echo $date2;
+		$query="INSERT INTO timesheet(date, name, proj_id, act_id, t_in, t_out, dur) VALUES ('".$date2."' , '".$c_id."' , '".$p_id."' , '".$a_id."' , '".$start."' , '".$end."' , '".$difference."' )";
+		$res=mysqli_query($con, $query);
+		echo $query;
+			
+			echo $c_id;
+			if($res)
+			echo 'Success';
+			else
+			echo $query;
+			
+		
+		
+		 redirect('./timesheet.php');
+		 
+		 }
 } 
 
 a:
