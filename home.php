@@ -1,3 +1,10 @@
+<!-- This is a new added code  -->
+<?php
+echo 'this class is here';
+?>
+
+
+
 <?php
 session_start();
 if(!isset($_SESSION['uname']))
