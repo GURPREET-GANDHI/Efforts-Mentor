@@ -18,7 +18,7 @@ $q =" DELETE FROM timesheet WHERE line_no= '".$selected."' ";
 
 
 $res=mysqli_query($con , $q);
-
+//This is one change
 if(!$res)
 echo $q;
 
